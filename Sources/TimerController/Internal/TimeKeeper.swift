@@ -197,16 +197,18 @@ extension TimeKeeper {
         switch action {
         case .pause:
             switch interruptionPolicy {
-            case .pauseAndResumeAutomatically, .pauseAutomatically: self.state = .paused
+            case .pauseAndResumeAutomatically, .pauseAutomatically:
+                pause()
+                delegate?.didPauseOnInterruption(self)
             case .none, .notifyOnExpiration: break
             }
-            delegate?.didPauseOnInterruption(self)
         case .resume:
             switch interruptionPolicy {
-            case .pauseAndResumeAutomatically: self.state = .running
+            case .pauseAndResumeAutomatically:
+                resume()
+                delegate?.didResumeAfterInterruption(self)
             case .none, .notifyOnExpiration, .pauseAutomatically: break
             }
-            delegate?.didResumeAfterInterruption(self)
         case .scheduleTimerNotification:
             let date = Date().addingTimeInterval(currentTime)
             delegate?.scheduleUserNotification(toSendAt: date, timer: self)

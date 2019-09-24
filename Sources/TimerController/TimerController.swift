@@ -11,9 +11,9 @@ public final class TimerController {
     
     
     // MARK: Interface
-    public init(_ tolerance: TimeInterval = 0.1) {
+    public init(_ timeInterval: TimeInterval = 0.1, tolerance: TimeInterval = 0.1) {
         timer = InternalTimer.scheduledTimer(
-            timeInterval: 0.1,
+            timeInterval: timeInterval,
             target: self,
             selector: #selector(timerDidFire),
             userInfo: nil,
@@ -180,11 +180,6 @@ extension TimerController: TimerDelegate {
 }
 
 public extension TimerController {
-    
-    enum NotificationResult {
-        case none
-        case isExpiredTimer
-    }
 
     struct NotificationCache {
 
