@@ -49,7 +49,7 @@ final class TimerControllerTests: XCTestCase {
         let delegate = FakeTimerDelegate()
         timer.delegate = delegate
         let onExit = UIApplication.willResignActiveNotification
-        let onEntry = UIApplication.willEnterForegroundNotification
+        let onEntry = UIApplication.didBecomeActiveNotification
         let nc = NotificationCenter.default
 
         // When
@@ -69,7 +69,7 @@ final class TimerControllerTests: XCTestCase {
         let delegate = FakeTimerDelegate()
         timer.delegate = delegate
         let onExit = UIApplication.willResignActiveNotification
-        let onEntry = UIApplication.willEnterForegroundNotification
+        let onEntry = UIApplication.didBecomeActiveNotification
         let nc = NotificationCenter.default
         
         // When

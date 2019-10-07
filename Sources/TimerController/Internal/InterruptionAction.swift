@@ -16,8 +16,7 @@ enum InterruptionAction {
     
     init?(_ notification: Notification, timerType: TimerType, interruptionPolicy: InterruptionPolicy) {
         switch notification.name {
-        case UIApplication.willResignActiveNotification,
-             UIApplication.didEnterBackgroundNotification:
+        case UIApplication.willResignActiveNotification:
             switch interruptionPolicy {
             case .notifyOnExpiration:
                 guard timerType == .countdown else { return nil }
@@ -27,8 +26,7 @@ enum InterruptionAction {
             default:
                 return nil
             }
-        case UIApplication.willEnterForegroundNotification,
-             UIApplication.didBecomeActiveNotification:
+        case UIApplication.didBecomeActiveNotification:
             switch interruptionPolicy {
             case .notifyOnExpiration:
                 guard timerType == .countdown else { return nil }

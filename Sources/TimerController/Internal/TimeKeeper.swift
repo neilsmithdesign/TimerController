@@ -172,8 +172,6 @@ extension TimeKeeper {
         let nc = NotificationCenter.default
         [
             UIApplication.willResignActiveNotification,
-            UIApplication.didEnterBackgroundNotification,
-            UIApplication.willEnterForegroundNotification,
             UIApplication.didBecomeActiveNotification
         ].forEach {
             nc.addObserver(
