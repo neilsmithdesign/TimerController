@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 public final class TimerController {
     
@@ -27,6 +28,10 @@ public final class TimerController {
             object: nil
         )
     }
+    
+    
+    /// Publisher for timer events
+    public private (set) var event: PassthroughSubject<TimerEvent, Never> = .init()
     
     
     /// Observer for receiving updates about active timers
@@ -81,7 +86,10 @@ public final class TimerController {
         NotificationCache.remove(notificationFor: notificationIdentifier)
         guard let id = activeTimers.first(where: { $0.value.notificationIdentifier == notificationIdentifier })?.key else { return }
         activeTimers.removeValue(forKey: id)
+        
+        event.send(TimerEvent(id: id, kind: .countdownEnded(whilstBackgrounded: true)))
         observer?.timerController(self, didEndCountdownTimerWith: id, whilstInTheBackground: true)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             self.notificationController.removeDelivered(notificationWith: notificationIdentifier)
         }
@@ -110,8 +118,10 @@ public final class TimerController {
             let didEnd = removeIfNeeded(timer, with: id)
             if didEnd {
                 let whilstInTheBackground = !timer.isValid
+                event.send(TimerEvent(id: id, kind: .countdownEnded(whilstBackgrounded: whilstInTheBackground)))
                 observer?.timerController(self, didEndCountdownTimerWith: id, whilstInTheBackground: whilstInTheBackground)
             } else {
+                event.send(TimerEvent(id: id, kind: .updated(time: timer.currentTime)))
                 observer?.timerController(self, timer: id, didUpdateWith: timer.currentTime)
             }
         }
@@ -142,11 +152,13 @@ extension TimerController: TimerDelegate {
     // MARK: Interruptions
     func didPauseOnInterruption(_ timer: TimeKeeper) {
         let id = TimerIdentifier(timer)
+        event.send(TimerEvent(id: id, kind: .pausedOnInterruption))
         observer?.timerController(self, didPauseOnInterruptionTimerWith: id)
     }
     
     func didResumeAfterInterruption(_ timer: TimeKeeper) {
         let id = TimerIdentifier(timer)
+        event.send(TimerEvent(id: id, kind: .resumed))
         observer?.timerController(self, didResume: id)
     }
     
