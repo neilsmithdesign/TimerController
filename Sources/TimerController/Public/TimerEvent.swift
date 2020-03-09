@@ -8,8 +8,8 @@
 import Foundation
 
 public struct TimerEvent {
-    let id: TimerIdentifier
-    let kind: Kind
+    public let id: TimerIdentifier
+    public let kind: Kind
 }
 
 public extension TimerEvent {
