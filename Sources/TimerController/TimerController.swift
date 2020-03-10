@@ -75,6 +75,10 @@ public final class TimerController {
         self.activeTimers.removeValue(forKey: id)
     }
     
+    public func currentTime(forTimerWith id: TimerIdentifier) -> TimeInterval? {
+        return activeTimers[id]?.currentTime
+    }
+    
     /// Queries the active timers cache with the supplied id for it's current state
     /// Returns nil if the timer is no longer active (i.e. cached)
     public func state(forTimerWith id: TimerIdentifier) -> TimerState? {
